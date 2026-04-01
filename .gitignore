@@ -1,0 +1,19 @@
+api_key.txt
+.env
+secrets.py
+02_Datasets/
+*.csv
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.DS_Store
+# Data files — too large for GitHub
+02_Datasets/
+*.csv
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.DS_Store
+

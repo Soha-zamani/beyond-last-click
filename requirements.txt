@@ -1,0 +1,8 @@
+pandas
+google-api-python-client
+matplotlib
+seaborn
+sqlalchemy
+psycopg2-binary
+jupyter
+scipy
