@@ -86,8 +86,9 @@ GROUP BY niche
 ORDER BY median_engagement DESC;
 
 -- H2 direct comparison: the 4 key niches (filtered + median)
--- FINDING: Fashion clearly #1. Beauty ≈ Lifestyle (0.0050 diff — needs Kruskal-Wallis).
--- Fitness is clearly last.SELECT
+-- FINDING: Fashion clearly #1. Beauty ≈ Lifestyle (0.0050 diff — confirmed by Kruskal-Wallis).
+-- Fitness is clearly last.
+SELECT
     niche,
     ROUND(PERCENTILE_CONT(0.5) WITHIN GROUP
           (ORDER BY view_per_subscriber)::numeric, 4) AS median_engagement
