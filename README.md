@@ -27,55 +27,53 @@ This project analyses real data to build a more complete picture of channel perf
 ```
 beyond-last-click/
 │
-├── 01_Master_File/          ← Project planning documents, task tracker
+├── 01_Master_File/          ← Project planning, task tracker, hypotheses
 │
-├── 02_Datasets/             ← All data files (NOT uploaded to GitHub)
-│   ├── youtube_influencers_real.csv        ← Raw YouTube API data (7,281 rows)
-│   ├── 5- Marketing A:B Testing.csv        ← Raw Facebook A/B test data
+├── 02_Datasets/             ← Data files (NOT uploaded — see README inside)
 │   └── processed/
-│       ├── youtube_influencers_clean.csv   ← After cleaning (Notebook 02)
-│       └── youtube_influencers_enriched.csv ← After API enrichment (Notebook 06)
+│       ├── youtube_influencers_clean.csv      ← After cleaning (Notebook 02)
+│       ├── youtube_influencers_enriched.csv   ← After API enrichment (Notebook 06)
+│       └── ab_testing_clean.csv               ← Cleaned A/B test data
 │
-├── 04_Analysis/             ← All charts and visualisations saved by notebooks
+├── 03_SQL/
+│   └── queries.sql                            ← All analysis queries (PostgreSQL)
 │
-├── 05_Tableau/              ← Tableau workbook (.twb) — interactive dashboards
+├── 04_Analysis/             ← Charts and visualisations exported from notebooks
 │
-├── 06_Presentation/         ← Final presentation slides + script
+├── 05_Notebooks/            ← All Jupyter notebooks — run in order
+│   ├── 01_data_collection_eda.ipynb
+│   ├── 02_data_cleaning_sql.ipynb
+│   ├── 03_hypothesis_testing.ipynb
+│   ├── 04_visualisations.ipynb
+│   ├── 05_Insights_Summary.ipynb
+│   ├── 06_YouTube_Enrichment.ipynb
+│   ├── 07_New_Findings.ipynb
+│   └── 08_Regression_Analysis.ipynb
 │
-├── notebooks/               ← All Jupyter notebooks — run in order
-│   ├── 01_data_collection_eda.ipynb          ← Load, validate, first EDA
-│   ├── 02_data_cleaning_sql.ipynb            ← Clean data + load into PostgreSQL
-│   ├── 03_hypothesis_testing.ipynb           ← Statistical testing (H1–H4)
-│   ├── Notebook_04_Regression_Analysis.ipynb ← Log-log regression for H3
-│   ├── 04_visualisations.ipynb               ← Final charts for all hypotheses
-│   ├── 05_Insights_Summary.ipynb             ← Conclusions and business insights
-│   ├── 06_YouTube_Enrichment.ipynb           ← YouTube API enrichment (engagement rate)
-│   └── 07_New_Findings.ipynb                 ← 4 Quadrants + Ideal Creator Profile
+├── 06_Tableau/              ← Tableau workbook (.twb) + dashboard screenshots
 │
-├── sql/
-│   └── queries.sql                           ← Analysis queries (DBeaver / PostgreSQL)
+├── 07_Presentation/         ← Final presentation slides + speaker scripts
 │
 ├── src/
-│   └── youtube_api_collector.py              ← Script to collect YouTube channel data
+│   └── youtube_api_collector.py               ← YouTube API data collection script
 │
-├── .gitignore                                ← Protects credentials + data files
-├── hypotheses.md                             ← All 6 hypotheses documented
-├── requirements.txt                          ← Python libraries needed
-└── README.md                                 ← This file
+├── .gitignore
+├── requirements.txt
+└── README.md
 ```
 
 ---
 
 ## 📊 Datasets
 
-| # | File | Source | Rows | What it covers |
+| # | Dataset | Source | Rows | Scope |
 |---|---|---|---|---|
-| 1 | `youtube_influencers_enriched.csv` | YouTube Data API v3 — collected by me | **4,527** | Active creator channels — 4 tiers, 9 niches, 82 countries, after quality filtering |
-| 2 | `5- Marketing A:B Testing.csv` | Kaggle (FavioVázquez) — real Facebook experiment | 588,101 | Paid ad vs organic — who converted |
+| 1 | YouTube Influencer Dataset | YouTube Data API v3 | 7,281 raw → **3,848 filtered** | 4 tiers, 9 niches, 82 countries |
+| 2 | Facebook A/B Test | Kaggle (FavioVázquez) | **588,101 users** | Paid ad vs organic conversion |
 
-> ⚠️ Data files are stored locally only and are NOT uploaded to GitHub (protected by .gitignore).
+> ⚠️ Data files are not uploaded to GitHub. See `02_Datasets/README.md` for sources and reproduction steps.
 >
-> Quality filters applied to YouTube data: ≥100 subscribers · ≥5 videos · last upload within 365 days.
+> Filter applied to YouTube data: `subscribers ≥ 1,000` (industry-standard nano tier lower bound) — ensures all channels represent real, discoverable creators.
 
 ---
 
@@ -83,29 +81,33 @@ beyond-last-click/
 
 | # | Hypothesis | Dataset | Test | Result |
 |---|---|---|---|---|
-| H1 | Nano influencers have higher VPS than mega influencers | YouTube API | Kruskal-Wallis | ✅ 5.0× advantage (p = 9.21e-263) |
-| H2 | Engagement varies significantly across content niches | YouTube API | Kruskal-Wallis | ✅ Fashion leads (VPS 1.09) |
-| H3 | Smaller channels produce more views per subscriber | YouTube API | Pearson + Regression | ✅ r = −0.52, R² = 0.27 |
-| H4 | Paid ads convert at a higher rate than organic | A/B Testing | Chi-square | ✅ +43% lift (2.55% vs 1.79%) |
-| H5 *(bonus)* | Geographic origin affects influencer engagement | YouTube API | Median by Country | ✅ Brazil, Nigeria, Spain lead |
-| H6 *(bonus)* | Conversion rate varies by time of day / day of week | A/B Testing | Conversion heatmap | ✅ Sat 5–7am · Mon–Tue 14–16:00 |
+| H1 | Nano influencers outperform mega on engagement efficiency | YouTube | Kruskal-Wallis | ✅ **2.7× advantage** — Nano VPS 0.884 vs Mega 0.326 (p = 9.21e-263) |
+| H2 | Engagement varies significantly across content niches | YouTube | Kruskal-Wallis | ✅ Fashion leads (median VPS 0.71), Fitness lowest |
+| H3 | Subscriber count negatively correlates with engagement | YouTube | Spearman + Regression | ✅ r = −0.51, every 10× size increase → −41% VPS |
+| H4 | Paid ads convert at a higher rate than organic | A/B Test | Chi-square | ✅ **+43% lift** — 2.55% vs 1.79% (causal, randomised) |
+| H5 *(bonus)* | Geographic origin affects influencer engagement | YouTube | Median by Country | ✅ Brazil (1.12), Turkey (0.79), South Africa (0.75) lead |
+| H6 *(bonus)* | Conversion rate varies by time of day and day of week | A/B Test | Conversion heatmap | ✅ Saturday 5am (5.68%), Mon–Tue 14–16:00 consistently strong |
 
-Full details in `hypotheses.md`
+Full details in `01_Master_File/hypotheses.md`
 
 ---
 
 ## 🆕 New Findings (Beyond the Hypotheses)
 
-**4 Creator Quadrants** — All 4,527 channels mapped by VPS × recency (30-day threshold):
+### 4 Creator Quadrants
+All 3,848 channels mapped by VPS × recency (30-day activity threshold):
 
-| Quadrant | Channels | Description |
-|---|---|---|
-| Q1 — Dream Creators | 1,515 | High VPS + recently active → best partnership candidates |
-| Q2 — Evergreen Creators | 750 | High VPS + less active → worth monitoring |
-| Q3 — Active but Struggling | 1,928 | Posting often, low reach → not recommended |
-| Q4 — Fading Out | 334 | Low VPS + inactive → remove from shortlists |
+| Quadrant | Description |
+|---|---|
+| Q1 — Dream Creators | High VPS + recently active → best partnership candidates |
+| Q2 — Evergreen Creators | High VPS + less active → worth monitoring |
+| Q3 — Active but Struggling | Posting often, low engagement → not recommended |
+| Q4 — Fading Out | Low VPS + inactive → remove from shortlists |
 
-**Ideal Creator Profile** — 668 channels (14.8%) meet the data-defined ideal: top 25% VPS (≥1.66) + uploaded within 30 days. Median VPS: 3.21 — 5.1× the dataset average of 0.63.
+### Ideal Creator Profile
+**448 channels (11.6% of 3,848)** meet the data-defined ideal: top 25% VPS + uploaded within 30 days.
+- Median VPS: **2.89** — 3.3× the nano average
+- Top combinations: Nano × Fashion (1.777), Nano × Shopping (1.097), Nano × Travel (0.951)
 
 ---
 
@@ -116,67 +118,50 @@ Full details in `hypotheses.md`
 | Python 3.9+ | Main analysis language |
 | Pandas | Data manipulation and cleaning |
 | Matplotlib + Seaborn | Data visualisation |
-| SciPy | Statistical testing (Kruskal-Wallis, chi-square, Pearson) |
+| SciPy + scikit-posthocs | Statistical testing (Kruskal-Wallis, Dunn's, chi-square) |
 | SQLAlchemy + psycopg2 | Python-to-PostgreSQL connection |
-| PostgreSQL (AWS RDS) | Data storage and querying |
-| DBeaver | SQL client for writing and running queries |
-| YouTube Data API v3 | Live data collection and enrichment |
-| Tableau | Interactive dashboard (4 story points) |
+| PostgreSQL (AWS RDS) | Data storage and SQL analysis |
+| DBeaver | SQL client |
+| YouTube Data API v3 | Live channel data collection |
+| Tableau Public | Interactive dashboards |
 | VSCode | Development environment |
 | GitHub | Version control and portfolio |
 
 ---
 
-## 🚀 How to Run This Project
+## 🚀 How to Run
 
-### Step 1 — Clone the repository
 ```bash
+# 1. Clone the repo
 git clone https://github.com/Soha-zamani/beyond-last-click.git
 cd beyond-last-click
-```
 
-### Step 2 — Install dependencies
-```bash
+# 2. Install dependencies
 pip install -r requirements.txt
+
+# 3. Add credentials
+# Create a .env file with your PostgreSQL and YouTube API credentials
+
+# 4. Add data files to 02_Datasets/processed/ (see 02_Datasets/README.md)
+
+# 5. Run notebooks in order (05_Notebooks/)
 ```
 
-### Step 3 — Add credentials
-Create a `.env` file in the root with your PostgreSQL and YouTube API credentials (see `.gitignore` — this file is never committed).
-
-### Step 4 — Add your data files
-Place these files in `02_Datasets/`:
-- `youtube_influencers_real.csv`
-- `5- Marketing A:B Testing.csv`
-
-### Step 5 — Run notebooks in order
-Open each notebook in `notebooks/` in VSCode and run from top to bottom:
-
-1. `01_data_collection_eda.ipynb` — Load, validate, first EDA
-2. `02_data_cleaning_sql.ipynb` — Clean + load into PostgreSQL
+**Notebook order:**
+1. `01_data_collection_eda.ipynb` — Load and validate raw data
+2. `02_data_cleaning_sql.ipynb` — Clean and load into PostgreSQL
 3. `03_hypothesis_testing.ipynb` — H1–H4 statistical tests
-4. `Notebook_04_Regression_Analysis.ipynb` — Log-log regression for H3
-5. `04_visualisations.ipynb` — Final charts
-6. `05_Insights_Summary.ipynb` — Conclusions and recommendations
-7. `06_YouTube_Enrichment.ipynb` — API enrichment (engagement rate)
-8. `07_New_Findings.ipynb` — 4 Quadrants + Ideal Creator Profile
-
----
-
-## 📅 Project Timeline
-
-| Week | Dates | Focus |
-|---|---|---|
-| Week 9 | March 30 – April 5 | Planning, data collection, SH#1 |
-| Week 10 | April 6 – 12 | EDA, cleaning, PostgreSQL, SH#2 |
-| Week 11 | April 13 – 19 | Hypothesis testing, Tableau, SH#3 |
-| Week 12 | April 20 – 27 | Polish, new findings, presentation, rehearsal |
-| **April 28** | **Graduation** | **Capstone presentation to external guests** |
+4. `04_visualisations.ipynb` — Final charts
+5. `05_Insights_Summary.ipynb` — Conclusions and recommendations
+6. `06_YouTube_Enrichment.ipynb` — YouTube API enrichment
+7. `07_New_Findings.ipynb` — 4 Quadrants + Ideal Creator Profile
+8. `08_Regression_Analysis.ipynb` — Log-log regression for H3
 
 ---
 
 ## 📬 Contact
 
 **Soheila Zamani**
-Data Analytics | SPICED Academy Berlin 2026
+Data Analytics | Marketing Strategy | SPICED Academy Berlin 2026
 📍 Berlin, Germany
 🔗 [GitHub](https://github.com/Soha-zamani) | [LinkedIn](https://www.linkedin.com/in/soheila-zamani)

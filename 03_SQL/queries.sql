@@ -45,15 +45,16 @@ FROM youtube_channels
 GROUP BY tier
 ORDER BY median_engagement DESC;
 
--- H1 filtered: same query, channels with >= 100 subscribers only
+-- H1 filtered: same query, channels with >= 1000 subscribers only
+-- (industry-standard nano tier lower bound — matches Tableau and presentation findings)
 SELECT
     tier,
     COUNT(*) AS channels,
     ROUND(AVG(view_per_subscriber)::numeric, 4) AS mean_engagement,
-    ROUND(PERCENTILE_CONT(0.5) WITHIN GROUP 
+    ROUND(PERCENTILE_CONT(0.5) WITHIN GROUP
           (ORDER BY view_per_subscriber)::numeric, 4) AS median_engagement
 FROM youtube_channels
-WHERE subscribers >= 100
+WHERE subscribers >= 1000
 GROUP BY tier
 ORDER BY median_engagement DESC;
 
@@ -74,14 +75,14 @@ FROM youtube_channels
 GROUP BY niche
 ORDER BY median_engagement DESC;
 
--- H2 filtered: channels >= 100 subscribers, median only
+-- H2 filtered: channels >= 1000 subscribers, median only
 SELECT
     niche,
     COUNT(*) AS channels,
     ROUND(PERCENTILE_CONT(0.5) WITHIN GROUP
           (ORDER BY view_per_subscriber)::numeric, 4) AS median_engagement
 FROM youtube_channels
-WHERE subscribers >= 100
+WHERE subscribers >= 1000
 GROUP BY niche
 ORDER BY median_engagement DESC;
 
@@ -94,7 +95,7 @@ SELECT
           (ORDER BY view_per_subscriber)::numeric, 4) AS median_engagement
 FROM youtube_channels
 WHERE niche IN ('Fashion', 'Beauty', 'Fitness', 'Lifestyle')
-  AND subscribers >= 100
+  AND subscribers >= 1000
 GROUP BY niche
 ORDER BY median_engagement DESC;
 

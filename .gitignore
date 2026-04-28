@@ -1,19 +1,23 @@
-api_key.txt
+# ── Secrets & credentials ──────────────────────────────────────────
 .env
+api_key.txt
 secrets.py
-02_Datasets/
-*.csv
-__pycache__/
-*.pyc
-.ipynb_checkpoints/
-.DS_Store
-# Data files — too large for GitHub
+
+# ── Data files (too large for GitHub) ──────────────────────────────
 02_Datasets/
 *.csv
 
-# Python
+# ── Python ─────────────────────────────────────────────────────────
 __pycache__/
 *.pyc
+*.pyo
+.venv/
+
+# ── Jupyter ─────────────────────────────────────────────────────────
 .ipynb_checkpoints/
+
+# ── macOS ───────────────────────────────────────────────────────────
 .DS_Store
 
+# ── Tableau backup files ─────────────────────────────────────────────
+*.twbr
