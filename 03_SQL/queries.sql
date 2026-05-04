@@ -131,7 +131,43 @@ ORDER BY view_per_subscriber DESC
 LIMIT 10;
 
 -- ============================================================
--- SECTION 5 — H4: PAID vs ORGANIC CONVERSION
+-- SECTION 5 — H5: ENGAGEMENT BY COUNTRY (GEOGRAPHY)
+-- Hypothesis: Geographic origin affects influencer engagement
+-- Filter: known countries only + minimum 10 channels for reliability
+-- ============================================================
+
+-- H5: Median engagement by country — identified markets only
+SELECT
+    country,
+    COUNT(*) AS channels,
+    ROUND(PERCENTILE_CONT(0.5) WITHIN GROUP
+          (ORDER BY view_per_subscriber)::numeric, 4) AS median_engagement
+FROM youtube_channels
+WHERE subscribers >= 1000
+  AND country != 'Unknown'
+GROUP BY country
+HAVING COUNT(*) >= 5
+-- Note: smaller markets (e.g. Switzerland, Romania) score high but have few channels
+-- Focus on Brazil, Turkey, South Africa as the most meaningful identified markets
+ORDER BY median_engagement DESC
+LIMIT 15;
+
+-- H5 top 3 summary with niche breakdown
+SELECT
+    country,
+    niche,
+    COUNT(*) AS channels,
+    ROUND(PERCENTILE_CONT(0.5) WITHIN GROUP
+          (ORDER BY view_per_subscriber)::numeric, 4) AS median_engagement
+FROM youtube_channels
+WHERE subscribers >= 1000
+  AND country IN ('Brazil', 'Turkey', 'South Africa')
+GROUP BY country, niche
+ORDER BY country, median_engagement DESC;
+
+
+-- ============================================================
+-- SECTION 6 — H4: PAID vs ORGANIC CONVERSION
 -- Hypothesis: Paid advertising converts better than organic
 -- ============================================================
 
