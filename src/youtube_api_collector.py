@@ -1,32 +1,32 @@
 # ============================================================
-# Beyond Last-Click — YouTube API Channel Collector (MAX MODE)
+# Beyond Last-Click — YouTube API Channel Collector
 # Author: Soheila Zamani | SPICED Academy Berlin 2026
 # ============================================================
-# THREE COLLECTION PASSES — all runnable TODAY with 3 API keys
+# Three-pass YouTube channel collection pipeline using separate API keys for parallel execution.
 #
-#   PASS 1 — Global search, 2 pages per query  → uses YOUTUBE_API_KEY
+#   PASS 1: Global search, 2 pages per query  → uses YOUTUBE_API_KEY
 #     Quota cost:  ~9,800 / 10,000 units
 #     Expected:    ~4,000–5,000 raw → ~2,500 new unique channels
 #
-#   PASS 2 — German/EU region search           → uses YOUTUBE_API_KEY_2
+#   PASS 2: Regional EU search           → uses YOUTUBE_API_KEY_2
 #     Quota cost:  ~9,300 / 10,000 units (auto-stops at limit)
 #     Expected:    ~3,000 raw → ~1,500 new unique channels
 #
-#   PASS 3 — Video search (finds micro channels) → uses YOUTUBE_API_KEY_3
+#   PASS 3: Video-based channel discovery → uses YOUTUBE_API_KEY_3
 #     Quota cost:  ~4,900 / 10,000 units
 #     Expected:    ~2,400 raw → ~1,000 new unique channels
 #
-# TOTAL TODAY: ~5,000–7,000+ unique channels (up from 1,738)
+# Results are merged into a single dataset.
+# Final dataset size depends on overlap between queries and passes.
 #
-# HOW TO RUN ALL THREE TODAY:
+# Execution instructions:
 #   1. Create 2 more free API keys at console.cloud.google.com
 #   2. Paste them into your .env file as YOUTUBE_API_KEY_2 and _3
 #   3. Run each pass in a separate terminal:
 #        PASS=1 python src/youtube_api_collector.py
 #        PASS=2 python src/youtube_api_collector.py
 #        PASS=3 python src/youtube_api_collector.py
-#   Or run them one after another in the same terminal — they merge automatically.
-# ============================================================
+# Passes can also be executed sequentially in a single terminal session; outputs are automatically merged.# ============================================================
 
 from googleapiclient.discovery import build
 from dotenv import load_dotenv
@@ -48,12 +48,12 @@ PAGES = 2         # Pages per query (each page = 50 results, costs 100 quota uni
 MAX_RESULTS = 50  # Results per page (YouTube maximum is 50)
 
 # Region codes for Pass 2 — adds geographic diversity
-# WHY: same query in different regions returns completely different creators
+# Note: same query in different regions returns completely different creators
 REGION_CODES = ["DE", "AT", "CH", "GB", "NL", "FR"]  # German-speaking + Western EU
 
 # ============================================================
 # STEP 1 — Load the correct API key for this pass
-# WHY: each pass uses a different key so all 3 can run today.
+# Note: each pass uses a different key so all 3 can run today.
 #   Pass 1 → YOUTUBE_API_KEY   (your original key)
 #   Pass 2 → YOUTUBE_API_KEY_2 (second Google Cloud project)
 #   Pass 3 → YOUTUBE_API_KEY_3 (third Google Cloud project)
@@ -71,17 +71,17 @@ API_KEY  = os.getenv(key_name)
 
 if not API_KEY or API_KEY.startswith("PASTE_"):
     raise ValueError(
-        f"❌ {key_name} not found or not filled in.\n"
+        f"{key_name} not found or not filled in.\n"
         f"   Go to console.cloud.google.com → create a new project → "
         f"enable YouTube Data API v3 → create an API key → "
         f"paste it into your .env file as {key_name}=your_key_here"
     )
 
 youtube = build('youtube', 'v3', developerKey=API_KEY)
-print(f"✅ YouTube API client ready — PASS {PASS} using {key_name}")
+print(f"YouTube API client ready — PASS {PASS} using {key_name}")
 
 # ── Live quota tracker ──────────────────────────────────────
-# WHY: YouTube gives 10,000 free units/day.
+# Note: YouTube gives 10,000 free units/day.
 # search.list  = 100 units per call
 # channels.list = 1 unit per call
 # We track this so you never accidentally go over the limit.
@@ -92,9 +92,11 @@ def use_quota(units, operation):
     global quota_used
     quota_used += units
     remaining = DAILY_LIMIT - quota_used
-    print(f"   📊 Quota: {quota_used:,} used / {DAILY_LIMIT:,} limit  ({remaining:,} remaining) [{operation}]")
-    if quota_used > DAILY_LIMIT * 0.95:
-        print("   ⚠️  Approaching daily quota limit — stopping soon")
+    print(f"Quota: {quota_used:,} used / {DAILY_LIMIT:,} limit  ({remaining:,} remaining) [{operation}]")
+    
+    QUOTA_SOFT_LIMIT = 0.95
+    if quota_used > DAILY_LIMIT * QUOTA_SOFT_LIMIT:
+        print("Approaching daily quota limit — stopping soon")
         return False  # signal to stop
     return True  # signal to continue
 
@@ -111,7 +113,7 @@ def assign_tier(subscribers):
 
 # ============================================================
 # STEP 3 — Search for CHANNELS by keyword (Pass 1 & 2)
-# WHY: returns up to 50 channel IDs per page.
+# Note: returns up to 50 channel IDs per page.
 #      With pagination we call this twice per query to get up to 100 IDs.
 #      regionCode filters results to that country's YouTube — entirely
 #      different channels than global results.
@@ -154,7 +156,7 @@ def search_channels_paginated(query, niche, pages=2, region_code=None):
                 break   # YouTube says there are no more pages
 
         except Exception as e:
-            print(f"   ⚠️  Search error '{query}' page {page_num}: {e}")
+            print(f"Search error '{query}' page {page_num}: {e}")
             break
 
         time.sleep(0.5)  # small pause between pages
@@ -164,7 +166,7 @@ def search_channels_paginated(query, niche, pages=2, region_code=None):
 
 # ============================================================
 # STEP 4 — Search for VIDEOS and extract their channel IDs (Pass 3)
-# WHY: YouTube's channel search surfaces popular/established channels.
+# Note: YouTube's channel search surfaces popular/established channels.
 #      Searching VIDEOS instead finds creators who make great content
 #      but whose channels are too small to rank in channel search.
 #      This is the best way to find micro and nano creators.
@@ -183,7 +185,7 @@ def search_via_videos(query, niche):
         ).execute()
 
         # Extract the channel ID from each video result
-        # WHY: each video belongs to a channel — this is our indirect route
+        # Note: each video belongs to a channel — this is our indirect route
         channel_ids = list(set([
             item['snippet']['channelId']
             for item in response.get('items', [])
@@ -191,13 +193,13 @@ def search_via_videos(query, niche):
         return channel_ids, niche
 
     except Exception as e:
-        print(f"   ⚠️  Video search error '{query}': {e}")
+        print(f" Video search error '{query}': {e}")
         return [], niche
 
 
 # ============================================================
 # STEP 5 — Fetch real stats for a list of channel IDs
-# WHY: search only gives us IDs. channels.list gives us the actual
+# Note: search only gives us IDs. channels.list gives us the actual
 #      data: subscribers, views, video count, country, name.
 #      We batch up to 50 IDs per API call to save quota.
 # ============================================================
@@ -242,7 +244,7 @@ def get_channel_stats(channel_ids, niche):
                     'niche':               niche
                 })
         except Exception as e:
-            print(f"   ⚠️  Stats error for batch: {e}")
+            print(f"Stats error for batch: {e}")
 
         time.sleep(0.3)
 
@@ -351,14 +353,14 @@ if PASS == 1:
 elif PASS == 2:
     print(f"EU/Germany region search ({len(search_queries)} queries × {len(REGION_CODES)} regions)")
     print(f"Estimated quota cost: ~{len(search_queries) * len(REGION_CODES) * 100:,} units")
-    print(f"⚠️  This exceeds 1 day quota — script will auto-stop at 95% limit")
+    print(f"This exceeds 1 day quota — script will auto-stop at 95% limit")
     print(f"{'='*60}\n")
 
     for region in REGION_CODES:
-        print(f"\n🌍 Region: {region}")
+        print(f"\nRegion: {region}")
         for i, (query, niche) in enumerate(search_queries.items(), 1):
             if quota_used > DAILY_LIMIT * 0.93:
-                print(f"\n⛔ Quota limit reached at {quota_used:,} units. Stopping safely.")
+                print(f"\n Quota limit reached at {quota_used:,} units. Stopping safely.")
                 break
             print(f"  [{i:02d}] '{query}' [{region}]")
             ids = search_channels_paginated(query, niche, pages=1, region_code=region)
@@ -372,7 +374,7 @@ elif PASS == 2:
 elif PASS == 3:
     print(f"Video search ({len(search_queries)} queries — extracts channel IDs from videos)")
     print(f"Estimated quota cost: ~{len(search_queries) * 100:,} units")
-    print(f"WHY: video search surfaces creators too small to rank in channel search")
+    print(f"Note: video search can surface smaller channels not returned by channel search.")
     print(f"{'='*60}\n")
 
     for i, (query, niche) in enumerate(search_queries.items(), 1):
@@ -385,9 +387,9 @@ elif PASS == 3:
         time.sleep(1)
 
 else:
-    raise ValueError(f"❌ Invalid PASS value: {PASS}. Must be 1, 2, or 3.")
+    raise ValueError(f"Invalid PASS value: {PASS}. Must be 1, 2, or 3.")
 
-print(f"\n✅ Pass {PASS} collection complete")
+print(f"\n Pass {PASS} collection complete")
 print(f"   Raw results collected: {len(all_new_channels)}")
 print(f"   Total quota used: {quota_used:,} / {DAILY_LIMIT:,} units")
 
@@ -403,7 +405,7 @@ print(f"   After internal dedup + cleaning: {len(df_new)} unique channels")
 
 # ============================================================
 # STEP 9 — Merge with existing dataset
-# WHY: we never overwrite existing data. We stack old + new,
+# Note: we never overwrite existing data. We stack old + new,
 #      deduplicate by channel_id (keeping the existing record),
 #      and save the combined result. Every pass ADDS to the dataset.
 # ============================================================
@@ -451,7 +453,7 @@ for niche, count in df_combined['niche'].value_counts().items():
     print(f"    {niche:22s}  {count:,}")
 
 print(f"\n  Countries represented: {df_combined['country'].nunique()}")
-print(f"\n  💾 Saved to: {OUTPUT_PATH}")
+print(f"\n  Saved to: {OUTPUT_PATH}")
 print(f"{'='*55}")
 print(f"\nNEXT STEP: Run Pass {PASS + 1 if PASS < 3 else 1} tomorrow (or with a second API key)")
 print(f"           Then copy output to 02_Datasets/processed/youtube_influencers_clean.csv")
