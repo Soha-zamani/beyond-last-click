@@ -18,7 +18,7 @@
 
 ## 📊 Interactive Dashboards
 
-🔗 **[YouTube Influencer Analysis — 3,848 Channels Across 9 Niches](https://public.tableau.com/app/profile/soheila.zamani/viz/YouTubeInfluencerAnalysis3848ChannelsAcross9Niches/YouTubeInfluencerAnalysis)**
+🔗 **[YouTube Influencer Analysis — 3,848 Channels Across 9 Niches](https://public.tableau.com/app/profile/soheila.zamani/viz/YouTubeInfluencerAnalysis_17782298022370/YouTubeInfluencerAnalysis)**
 
 🔗 **[Creator Quadrants — From Dream Creators to Fading Out](https://public.tableau.com/app/profile/soheila.zamani/viz/3848ChannelsMappedFromDreamCreatorstoFadingOut/Dashboard5)**
 
