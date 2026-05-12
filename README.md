@@ -4,7 +4,23 @@
 **Author:** Soheila Zamani
 **School:** SPICED Academy Berlin — Data Analytics Bootcamp 2026
 **Graduation:** April 28, 2026
-**GitHub:** https://github.com/Soha-zamani/beyond-last-click
+
+---
+
+## 🔑 Key Findings
+
+- **Nano creators deliver 2.7× the engagement per subscriber** of mega creators (Kruskal-Wallis, p < 0.001)
+- **Paid ads convert at 1.4× the rate of organic** — +43% lift, statistically significant on 588K users (chi-square)
+- **Saturday 5–7am and Monday–Tuesday 14–16:00** are the highest-converting time windows
+- **Brazil, Turkey, and South Africa** lead engagement medians across 82 countries — most influencer plans skip them
+
+---
+
+## 📊 Interactive Dashboards
+
+🔗 **[YouTube Influencer Analysis — 3,848 Channels Across 9 Niches](https://public.tableau.com/app/profile/soheila.zamani/viz/YouTubeInfluencerAnalysis3848ChannelsAcross9Niches/YouTubeInfluencerAnalysis)**
+
+🔗 **[Creator Quadrants — From Dream Creators to Fading Out](https://public.tableau.com/app/profile/soheila.zamani/viz/3848ChannelsMappedFromDreamCreatorstoFadingOut/Dashboard5)**
 
 ---
 
@@ -22,48 +38,6 @@ This project analyses real data to build a more complete picture of channel perf
 
 ---
 
-## 📁 Project Structure
-
-```
-beyond-last-click/
-│
-├── 01_Master_File/          ← Project planning, task tracker, hypotheses
-│
-├── 02_Datasets/             ← Data files (NOT uploaded — see README inside)
-│   └── processed/
-│       ├── youtube_influencers_clean.csv      ← After cleaning (Notebook 02)
-│       ├── youtube_influencers_enriched.csv   ← After API enrichment (Notebook 06)
-│       └── ab_testing_clean.csv               ← Cleaned A/B test data
-│
-├── 03_SQL/
-│   └── queries.sql                            ← All analysis queries (PostgreSQL)
-│
-├── 04_Analysis/             ← Charts and visualisations exported from notebooks
-│
-├── 05_Notebooks/            ← All Jupyter notebooks — run in order
-│   ├── 01_data_collection_eda.ipynb
-│   ├── 02_data_cleaning_sql.ipynb
-│   ├── 03_hypothesis_testing.ipynb
-│   ├── 04_visualisations.ipynb
-│   ├── 05_Insights_Summary.ipynb
-│   ├── 06_YouTube_Enrichment.ipynb
-│   ├── 07_New_Findings.ipynb
-│   └── 08_Regression_Analysis.ipynb
-│
-├── 06_Tableau/              ← Tableau workbook (.twb) + dashboard screenshots
-│
-├── 07_Presentation/         ← Final presentation slides + speaker scripts
-│
-├── src/
-│   └── youtube_api_collector.py               ← YouTube API data collection script
-│
-├── .gitignore
-├── requirements.txt
-└── README.md
-```
-
----
-
 ## 📊 Datasets
 
 | # | Dataset | Source | Rows | Scope |
@@ -77,7 +51,7 @@ beyond-last-click/
 
 ---
 
-## 🔬 Hypotheses — All 6 Confirmed
+## 🔬 Hypotheses & Results
 
 | # | Hypothesis | Dataset | Test | Result |
 |---|---|---|---|---|
@@ -129,33 +103,38 @@ All 3,848 channels mapped by VPS × recency (30-day activity threshold):
 
 ---
 
+<details>
+<summary>📁 Project Structure (click to expand)</summary>
+
+```
+beyond-last-click/
+├── 01_Master_File/          ← Project planning, task tracker, hypotheses
+├── 02_Datasets/             ← Data files (NOT uploaded — see README inside)
+├── 03_SQL/                  ← All analysis queries (PostgreSQL)
+├── 04_Analysis/             ← Charts and visualisations exported from notebooks
+├── 05_Notebooks/            ← All Jupyter notebooks — run in order
+├── 06_Tableau/              ← Tableau workbook + dashboard screenshots
+├── 07_Presentation/         ← Final presentation slides + speaker scripts
+├── src/                     ← YouTube API data collection script
+├── .gitignore
+├── requirements.txt
+└── README.md
+```
+
+</details>
+
+---
+
 ## 🚀 How to Run
 
 ```bash
-# 1. Clone the repo
-git clone https://github.com/Soha-zamani/beyond-last-click.git
+git clone https://github.com/soheila-zamani/beyond-last-click.git
 cd beyond-last-click
-
-# 2. Install dependencies
 pip install -r requirements.txt
-
-# 3. Add credentials
-# Create a .env file with your PostgreSQL and YouTube API credentials
-
-# 4. Add data files to 02_Datasets/processed/ (see 02_Datasets/README.md)
-
-# 5. Run notebooks in order (05_Notebooks/)
+# Add a .env file with your PostgreSQL and YouTube API credentials
+# Add data files to 02_Datasets/processed/ (see 02_Datasets/README.md)
+# Run notebooks in 05_Notebooks/ in numerical order
 ```
-
-**Notebook order:**
-1. `01_data_collection_eda.ipynb` — Load and validate raw data
-2. `02_data_cleaning_sql.ipynb` — Clean and load into PostgreSQL
-3. `03_hypothesis_testing.ipynb` — H1–H4 statistical tests
-4. `04_visualisations.ipynb` — Final charts
-5. `05_Insights_Summary.ipynb` — Conclusions and recommendations
-6. `06_YouTube_Enrichment.ipynb` — YouTube API enrichment
-7. `07_New_Findings.ipynb` — 4 Quadrants + Ideal Creator Profile
-8. `08_Regression_Analysis.ipynb` — Log-log regression for H3
 
 ---
 
@@ -164,4 +143,4 @@ pip install -r requirements.txt
 **Soheila Zamani**
 Data Analytics | Marketing Strategy | SPICED Academy Berlin 2026
 📍 Berlin, Germany
-🔗 [GitHub](https://github.com/Soha-zamani) | [LinkedIn](https://www.linkedin.com/in/soheila-zamani)
+🔗 [GitHub](https://github.com/soheila-zamani) | [LinkedIn](https://www.linkedin.com/in/soheilazamani)
