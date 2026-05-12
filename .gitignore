@@ -21,3 +21,6 @@ __pycache__/
 
 # ── Tableau backup files ─────────────────────────────────────────────
 *.twbr
+
+# Allow the dataset README to be uploaded
+!02_Datasets/README.md
