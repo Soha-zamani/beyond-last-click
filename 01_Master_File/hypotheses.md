@@ -19,7 +19,7 @@
 | Dataset | Source | Rows | What it covers |
 |---|---|---|---|
 | YouTube Influencer Data | YouTube Data API v3 — collected by me | **3,848 channels** (after filter) | All 4 tiers · 9 niches · 82 countries |
-| Marketing A/B Testing | Kaggle (FavioVázquez) — real Facebook experiment | 588,101 real users | Paid vs Organic conversion rates |
+| Marketing A/B Testing | Kaggle (FavioVázquez) — real marketing campaign A/B test | 588,101 real users | Paid vs Organic conversion rates |
 
 > Filter applied: `subscribers ≥ 1,000` (industry-standard nano tier lower bound). Ensures all channels represent real, discoverable creators.
 

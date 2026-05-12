@@ -43,7 +43,7 @@ This project analyses real data to build a more complete picture of channel perf
 | # | Dataset | Source | Rows | Scope |
 |---|---|---|---|---|
 | 1 | YouTube Influencer Dataset | YouTube Data API v3 | 7,281 raw → **3,848 filtered** | 4 tiers, 9 niches, 82 countries |
-| 2 | Facebook A/B Test | Kaggle (FavioVázquez) | **588,101 users** | Paid ad vs organic conversion |
+| 2 | Marketing A/B Test | Kaggle (FavioVázquez) | **588,101 users** | Paid ad vs organic conversion |
 
 > ⚠️ Data files are not uploaded to GitHub. See `02_Datasets/README.md` for sources and reproduction steps.
 >

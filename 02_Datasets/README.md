@@ -2,7 +2,7 @@
 
 The data files are not included in this repository (excluded via `.gitignore`) because:
 - The YouTube dataset is collected from the YouTube Data API v3 (terms of service prohibit redistribution).
-- The Facebook A/B Test CSV is large (~85 MB) and is the original property of its Kaggle author.
+- The Marketing A/B Test CSV is large (~21 MB) and is the original property of its Kaggle author.
 
 Both datasets are reproducible — see the source links and instructions below.
 
@@ -15,7 +15,7 @@ Both datasets are reproducible — see the source links and instructions below.
 - **Filter applied for analysis:** `subscribers >= 1,000` (industry-standard nano tier lower bound) → **3,848 channels** in the analysis dataset
 - **Key columns:** `channel_name`, `subscribers`, `total_views`, `view_per_subscriber`, `tier`, `niche`, `country`, `days_since_last_upload`
 
-### 2. Facebook A/B Test Dataset (public Kaggle dataset)
+### 2. Marketing A/B Test Dataset (public Kaggle dataset)
 - **File:** `processed/ab_testing_clean.csv`
 - **Source:** Kaggle — [Marketing A/B Testing by FavioVázquez](https://www.kaggle.com/datasets/faviovaz/marketing-ab-testing)
 - **Size:** 588,101 users — randomly assigned to `ad` (paid) group or `psa` (organic baseline) group
