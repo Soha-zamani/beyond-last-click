@@ -23,7 +23,7 @@ Both datasets are reproducible — see the source links and instructions below.
 
 ## How to Reproduce
 
-1. **YouTube data:** Get a free YouTube Data API v3 key at [console.cloud.google.com](https://console.cloud.google.com), paste it into a `.env` file as `YOUTUBE_API_KEY=...`, then run `src/youtube_api_collector.py`. The script handles pagination, batching, quota tracking, and deduplication.
+1. **YouTube data:** Run `src/youtube_api_collector.py`. The script collects channel data via the YouTube Data API v3 — it handles pagination, batching, quota tracking, and deduplication. Setup instructions for the API key are in the script itself.
 2. **A/B test data:** Download the CSV from the Kaggle link above and place it in `02_Datasets/processed/` as `ab_testing_clean.csv`.
 3. Run `05_Notebooks/01_data_collection_eda.ipynb` for initial exploration.
 4. Run `05_Notebooks/02_data_cleaning_sql.ipynb` to clean and load into PostgreSQL.
