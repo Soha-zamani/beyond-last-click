@@ -20,6 +20,8 @@ Both datasets are reproducible — see the source links and instructions below.
 - **Source:** Kaggle — [Marketing A/B Testing by FavioVázquez](https://www.kaggle.com/datasets/faviovaz/marketing-ab-testing)
 - **Size:** 588,101 users — randomly assigned to `ad` (paid) group or `psa` (organic baseline) group
 - **Key columns:** `test_group`, `converted`, `total_ads`, `most_ads_day`, `most_ads_hour`
+- **What we know:** Randomised experiment, paid ad exposure vs PSA (Public Service Announcement) control. Each user's conversion outcome, total ads seen, peak day and peak hour are recorded.
+- **What we do not know:** The Kaggle dataset does not disclose the product, industry, ad platform (web, mobile, video, etc.), or brand. Findings represent a generic paid-ad vs organic-baseline comparison — not a specific channel or vertical. Results should be validated against your own product/campaign before generalising the +43% lift.
 
 ## How to Reproduce
 
